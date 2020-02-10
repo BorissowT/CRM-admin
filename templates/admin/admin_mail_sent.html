@@ -1,0 +1,46 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+
+    <div class="container" style="margin-top:50px">
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <a href="/">Назад</a>
+
+                <h3>Отправить письмо</h3>
+
+                <br>
+
+                <p class="alert alert-success">Письмо отправлено</p>
+
+                <br>
+
+                <form action="" method="POST"></form>
+
+                <p>Кому: {{applicant.name}}</p>
+
+
+
+                <br>
+
+                <p>Тема: {{theme}}</p>
+
+
+
+                <br>
+
+                <p>Текст письма:</p>
+                <p>{{text}}</p>
+
+
+                <br>
+
+                <a href="" class="btn btn-primary" "/>Вернуться</a>
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

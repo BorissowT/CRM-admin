@@ -1,0 +1,82 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+<div class="container" style="margin-top:50px">
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well">
+
+                <h2>Заявки</h2>
+                <p>{{apptotal}} всего. {{satisfied}} распределены {{notsatisfied}} не распределены</p>
+
+                <h3>Новые заявки</h3>
+                <table class="table">
+                    <tr>
+                        <td><a href="/">{{lstapp.groups[0].title}} {{lstapp.groups[0].startdate}}</a></td>
+                        <td>{{lstapp.groups[0].applicants|length}} / 10 набрано</td>
+                        {% if lstapp.groups[0].applicants|length <  10 %}
+                        <td><p class="text-success">есть места</p></td>
+                        {% elif lstapp.groups[0].applicants|length ==  10 %}
+                        <td>группа набрана</td>
+                        {% else %}
+                        <td><p class="text-danger">группа переполнена!</p></td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td><a href="/">{{ndtapp.groups[0].title}}</a></td>
+                        <td>{{ndtapp.groups[0].applicants|length}} / 10 набрано</td>
+                        {% if ndtapp.groups[0].applicants|length <  10 %}
+                        <td><p class="text-success">есть места</p></td>
+                        {% elif ndtapp.groups[0].applicants|length ==  10 %}
+                        <td>группа набрана</td>
+                        {% else %}
+                        <td><p class="text-danger">группа переполнена!</p></td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td><a href="/">{{thrdapp.groups[0].title}} {{thrdapp.groups[0].startdate}}</a></td>
+                        <td>{{thrdapp.groups[0].applicants|length}} / 10 набрано</td>
+                         {% if thrdapp.groups[0].applicants|length <  10 %}
+                        <td><p class="text-success">есть места</p></td>
+                        {% elif thrdapp.groups[0].applicants|length ==  10 %}
+                        <td>группа набрана</td>
+                        {% else %}
+                        <td><p class="text-danger">группа переполнена!</p></td>
+                        {% endif %}
+                    </tr>
+                </table>
+                <br>
+                <a href="" class></a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="well">
+
+                <h2>Группы</h2>
+                <br>
+                <table class="table">
+                    {% for group in groups%}
+                    <tr>
+                        <td><a href="/">{{group.title}}</a></td>
+                        <td>{{group.applicants|length}} / 10 набрано</td>
+                        {% if group.applicants|length <  10 %}
+                        <td><p class="text-success">есть места</p></td>
+                        {% elif group.applicants|length ==  10 %}
+                        <td>группа набрана</td>
+                        {% else %}
+                        <td><p class="text-danger">группа переполнена!</p></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                    
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+{% endblock %}
