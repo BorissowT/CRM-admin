@@ -11,28 +11,29 @@
   <main class="container">
     <div class="row">
       <div class="col-8 col-lg-4 offset-2 offset-lg-4">
-        <form class="form-signin pt-5 mt-5">
+            <form method="POST" action="{{ url_for('login') }}"> 
           <div class="text-center m-6 b-1">
+              
+              {{ form.csrf_token }}
             <h1 class="h3 mb-3 font-weight-normal">Stepik CRM</h1>
             <p class="mb-4">Что-то мы вас не узнали</p>
           </div>
 
           <p class="alert alert-danger text-center">Неверный логин или пароль</p>
 
-          <div class="form-label-group">
-            <p class="text-muted">Электропочта</p>
-            <input type="email" id="inputEmail" class="form-control" required autofocus>
-            <label for="inputEmail"></label>
-          </div>
-          <div class="form-label-group">
-            <p class="text-muted">Пароль</p>
-            <input type="password" id="inputPassword" class="form-control" required>
-            <label for="inputPassword"></label>
-          </div>
+        
+            <p class="text-muted">Email</p>
+            {{form.mail(class = "form-control")}}
+            
+         
+            <p class="text-muted">Password</p>
+            {{form.password(class = "form-control")}}
+            
           <div class="checkbox mb-3"> </div>
           <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
         </form>
       </div>
+            
     </div>
   </main>
 </body>

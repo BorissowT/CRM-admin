@@ -1,6 +1,10 @@
 from flask_mail import Mail, Message
 from models import *
 
+app.secret_key = 'my-super-secret-phrase-I-do-not-tell-this-to-nobody'
+
+
+
 class Config:
     """
        Класс настроек приложения Flask

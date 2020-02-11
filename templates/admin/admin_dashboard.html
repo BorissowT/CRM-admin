@@ -24,7 +24,7 @@
                         {% endif %}
                     </tr>
                     <tr>
-                        <td><a href="/">{{ndtapp.groups[0].title}}</a></td>
+                        <td><a href="/">{{ndtapp.groups[0].title}} {{lstapp.groups[0].startdate}}</a></td>
                         <td>{{ndtapp.groups[0].applicants|length}} / 10 набрано</td>
                         {% if ndtapp.groups[0].applicants|length <  10 %}
                         <td><p class="text-success">есть места</p></td>

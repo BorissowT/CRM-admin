@@ -1,30 +1,37 @@
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import Admin, BaseView, AdminIndexView, expose
+from flask_login import login_required
 from forms import *
 from Config import *
-
+from app import *
 
 class DashboardView(AdminIndexView):
 
     @expose('/')
+
     def index(self):
-        apptotal = db.session.query(Applicant).count()
-        satisfied = db.session.query(Applicant).filter(Applicant.status == "распределена в группу").count()
-        notsatisfied = apptotal-satisfied
-        lastapplicants_query = db.session.query(Applicant).order_by(Applicant.id.desc()).limit(3)
-        lastappl = lastapplicants_query.all()
-        lstapp = lastappl[0]
-        ndapp = lastappl[1]
-        thrdapp = lastappl[2]
-        groups = db.session.query(Group).all()
+        if session["user_id"]:
+            print(session["user_id"])
+            session.pop("user_id")
+            apptotal = db.session.query(Applicant).count()
+            satisfied = db.session.query(Applicant).filter(Applicant.status == "распределена в группу").count()
+            notsatisfied = apptotal-satisfied
+            lastapplicants_query = db.session.query(Applicant).order_by(Applicant.id.desc()).limit(3)
+            lastappl = lastapplicants_query.all()
+            lstapp = lastappl[0]
+            ndapp = lastappl[1]
+            thrdapp = lastappl[2]
+            groups = db.session.query(Group).all()
 
-        return self.render('admin/admin_dashboard.html', apptotal=apptotal, satisfied=satisfied,
-                           notsatisfied=notsatisfied, lstapp=lstapp, ndtapp=ndapp, thrdapp=thrdapp, groups=groups)
-
+            return self.render('admin/admin_dashboard.html', apptotal=apptotal, satisfied=satisfied,
+                               notsatisfied=notsatisfied, lstapp=lstapp, ndtapp=ndapp, thrdapp=thrdapp, groups=groups)
+        else:
+            return redirect('/login')
 
 class MailsView(BaseView):
 
     @expose('/', methods=["POST", "GET"])
+    @login_required
     def mailer(self):
         form = MAILS()
 
