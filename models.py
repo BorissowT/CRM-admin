@@ -1,11 +1,8 @@
-import password as password
-from flask import Flask, request, session
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import event
+from app import app
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import SQLAlchemy
 
 
-app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///school.db'
 db = SQLAlchemy(app)
 

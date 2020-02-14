@@ -1,6 +1,10 @@
-from flask import session, redirect, render_template
-from app import *
-from flask_login import current_user, login_user, logout_user, login_required
+from forms import USER
+from flask import render_template, request, session, redirect
+from app import app
+from models import *
+from Config import *
+
+
 
 #user = User(username = "test" ,password = "test", mail="test@gmail.com",)
 #db.session.add(user)
@@ -15,8 +19,9 @@ def login():
         user = db.session.query(User).filter(User.mail == mail).first()
         print(user)
         if user and user.password_hash == password:
-            session["user_id"] = user.id
-            login_user(user)
+            session["access"] = user.role
+            app.config['BASIC_AUTH_USERNAME'] = user.mail
+            app.config['BASIC_AUTH_PASSWORD'] = user.password_hash
             return redirect("/")
         else:
             # Пользователь не найден или не верный пароль
@@ -29,3 +34,11 @@ def home():
     if not session.get('user_id'):
         return redirect('/login')
     return redirect('/admin')
+
+
+@app.route('/logout', methods=["POST"])
+def logout():
+    if session.get("access"):
+        session.pop("access")
+    return redirect("/login")
+

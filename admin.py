@@ -1,18 +1,24 @@
+from flask_admin import AdminIndexView, expose, BaseView, Admin
 from flask_admin.contrib.sqla import ModelView
-from flask_admin import Admin, BaseView, AdminIndexView, expose
-from flask_login import login_required
-from forms import *
+from flask import session, redirect, request
+from flask_basicauth import BasicAuth
+
+from models import *
+from forms import MAILS
 from Config import *
-from app import *
+from app import app
+
+basic_auth = BasicAuth(app)
+
 
 class DashboardView(AdminIndexView):
 
     @expose('/')
 
     def index(self):
-        if session["user_id"]:
+        if session.get("access")=="admin":
             print(session["user_id"])
-            session.pop("user_id")
+            #session.pop("user_id")
             apptotal = db.session.query(Applicant).count()
             satisfied = db.session.query(Applicant).filter(Applicant.status == "распределена в группу").count()
             notsatisfied = apptotal-satisfied
@@ -31,51 +37,50 @@ class DashboardView(AdminIndexView):
 class MailsView(BaseView):
 
     @expose('/', methods=["POST", "GET"])
-    @login_required
     def mailer(self):
-        form = MAILS()
-
-        if request.method == "POST":
-            adress = request.form.get('adress')
-            theme = form.theme.data
-            text = form.text.data
-            applicant = db.session.query(Applicant).get(adress)
-            with app.app_context():
-                    print("all ok")
-                    msg = Message(subject=theme,
-                                  sender="timoshaborisov@yandex.ru",
-                                  recipients=[applicant.mail],  # replace with your email for testing
-                                  body=text)
-                    mail.send(msg)
-            return self.render('admin/admin_mail_sent.html', applicant=applicant, theme=theme, text=text)
-        applicants = db.session.query(Applicant).all()
-        return self.render('admin/admin_mail_edit.html', applicants=applicants, form=form)
+        if session.get("access")=="admin":
+            form = MAILS()
+            if request.method == "POST":
+                adress = request.form.get('adress')
+                theme = form.theme.data
+                text = form.text.data
+                applicant = db.session.query(Applicant).get(adress)
+                with app.app_context():
+                        msg = Message(subject=theme,
+                                      sender="timoshaborisov@yandex.ru",
+                                      recipients=[applicant.mail],  # replace with your email for testing
+                                      body=text)
+                        mail.send(msg)
+                return self.render('admin/admin_mail_sent.html', applicant=applicant, theme=theme, text=text)
+            applicants = db.session.query(Applicant).all()
+            return self.render('admin/admin_mail_edit.html', applicants=applicants, form=form)
+        else:
+            return redirect('/login')
 
 
 class ApplicantView(ModelView):
+        column_searchable_list = ['mail', "phone", "name"]
+        column_filters = ['groups.title']
+        page_size = 25
+        form_choices = {"status": [('новая', 'новая'), ("обрабатывается", "обрабатывается"), ("оплачена", "оплачена"),
+                         ("распределена в группу", "распределена в группу")]}
 
-    column_searchable_list = ['mail', "phone", "name"]
-    column_filters = ['groups.title']
-    page_size = 25
-    form_choices = {"status": [('новая', 'новая'), ("обрабатывается", "обрабатывается"), ("оплачена", "оплачена"),
-                    ("распределена в группу", "распределена в группу")]}
 
 
 class GroupView(ModelView):
+        form_excluded_columns = ['applicants', "size"]
+        column_searchable_list = ["startdate", "title"]
+        column_filters = ['course']
+        page_size = 25
+        form_choices = {"status": [('набирается', 'набирается'), ("набрана", "набрана"), ("идет", "идет"),
+                        ("в архиве", "в архиве")], "course": [("python", "python"), ("vue", "vue"),
+                                                              ("django", "django"), ("php", "php"),
+                                                              ("html", "html")]}
 
-    form_excluded_columns = ['applicants', "size"]
-    column_searchable_list = ["startdate", "title"]
-    column_filters = ['course']
-    page_size = 25
-    form_choices = {"status": [('набирается', 'набирается'), ("набрана", "набрана"), ("идет", "идет"),
-                    ("в архиве", "в архиве")], "course": [("python", "python"), ("vue", "vue"),
-                                                          ("django", "django"), ("php", "php"),
-                                                          ("html", "html")]}
 
 
 
 class UserView(ModelView):
-
     column_exclude_list = ['password']
     column_searchable_list = ['name', 'mail']
 
