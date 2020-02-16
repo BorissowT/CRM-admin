@@ -1,25 +1,31 @@
-from flask import Flask, request
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import event
 
-
-
-app = Flask(__name__)
+from app import app
+app.secret_key = 'my-super-secret-phrase-I-do-not-tell-this-to-nobody'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///school.db'
 db = SQLAlchemy(app)
 
 
-
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     mail = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+    role = db.Column(db.String(32), nullable=False)
     can_view_details = False
 
     def __repr__(self):
         return "id {0} имя:{1}".format(self.id, self.name)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def password_valid(self, password):
+        return check_password_hash(self.password_hash, password)
+
 
 applicants_groups_association = db.Table('users_chats',
     db.Column('group_id', db.Integer, db.ForeignKey('groups.id')),
@@ -55,3 +61,6 @@ class Applicant(db.Model):
 
     def __repr__(self):
         return "Заявка номер #{0} имя:{1}".format(self.id, self.name)
+
+
+
