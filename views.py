@@ -36,6 +36,7 @@ def home():
 @login_required
 def logout():
     logout_user()
+    session.pop("name")
     return """<h2> SUCCESSFULLY LOGGEDOUT. please wait...</h2>
     <script>    
      window.setTimeout(function(){
