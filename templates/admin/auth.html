@@ -5,6 +5,7 @@
   <title>Authorisation | Touradmin</title>
   <meta charset="utf-8">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACdUlEQVR42oWSXUhTYRjH/+dsrpGwhqdi6LaaF2ujD6KE8qoICoIVgXVhIOnmllHojVCUFV0IFRSUiImEMnBeVPa5u6CIJATJj4m24TDxs5xnm9Mdpzs7PYdlMJ32wsN5z/M+z+/9P/9zGGRZj+83fLDsNZ9eFJbiTCq1ZWQkOHmjrtaUrZZZm/C4X4RKy85z8l5ILEFMihAlBh1uD65cdTKbAqj5BzXviUYX4G71YKC/L0Lp5bMltp27TSY8qH842t7RVrgh4HnryyF7eYnV6/2It97PeS1N9WE573BVT9ZUV+U3NzWjsfEJsyGg3fM6eLH0XKEMsNlO/jurunZz2FFxwdLwrA3uls0BP4+fKN7V2+NbCxgigPW/gG9Pz0h6UwrL07NQgQUrSmAEAYp4DGx4CmwsAbVBh9zbM8w6QKfr2PgR12V9/mEdMNcFRKaAebIgKsc8vdMzHALM+8APh8DVDjIZgFeOo2NFzgqjcT+ZHOilhnEC/KYTkaqSgJJCIJBGA/5rP7h745mATmfxWJHjktFwiP6XgI8AM0CMAMkEsBIHUhRxUsHlge/xg7u7FlD5F3CwAPATgCcFkV90Mx0qSAWbAhKLwDYOfNd3cHXBLAD7KmCA5pUB09RMJUopHTJAsx38lx5wd9YByAN7mdFwwECAPgJMkAekIIelZgoVFa0IacCnbnC3/NlMrDQai8xpwGwQCI2SdJIvkYE5yrQHWi34bt96D97XnJogQIHOSmZ1v6NPSSMsxNOy43QzoyBDaQy9AeFABHnXA5kAeb0pt0R3bJ1TS6JiWcVIUEgpGj2JHDEBJVWqaK/WanJ1j0Lsas8fvb8UIHI6LsEAAAAASUVORK5CYII=" type="image/png">
 </head>
 
 <body>
@@ -16,10 +17,17 @@
               
               {{ form.csrf_token }}
             <h1 class="h3 mb-3 font-weight-normal">Stepik CRM</h1>
-            <p class="mb-4">Что-то мы вас не узнали</p>
           </div>
 
-          <p class="alert alert-danger text-center">Неверный логин или пароль</p>
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <ul class=flashes>
+                    {% for message in messages %}
+                      <p class="alert alert-danger text-center mr-5">{{ message }}</p>
+                    {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
 
         
             <p class="text-muted">Email</p>

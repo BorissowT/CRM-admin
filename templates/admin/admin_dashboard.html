@@ -1,51 +1,43 @@
 {% extends 'admin/master.html' %}
 {% block body %}
 <div class="container" style="margin-top:50px">
-
-
+    <div class="row">
+          <div class="col-md-10">
+            <p class="h2 mb-3 ">Username: {{name}}</p>
+          </div>
+          <div class="col-md-2">
+            <a href="/logout" class=" btn btn-danger">Выход из admin</a>
+          </div>
+    </div>
+    <br>
     <div class="row">
         <div class="col-md-6">
             <div class="well">
 
                 <h2>Заявки</h2>
+             {% if apptotal >  0 %}
+                
                 <p>{{apptotal}} всего. {{satisfied}} распределены {{notsatisfied}} не распределены</p>
 
                 <h3>Новые заявки</h3>
                 <table class="table">
+                  {% for applicant in appliclist %}    
                     <tr>
-                        <td><a href="/">{{lstapp.groups[0].title}} {{lstapp.groups[0].startdate}}</a></td>
-                        <td>{{lstapp.groups[0].applicants|length}} / 10 набрано</td>
-                        {% if lstapp.groups[0].applicants|length <  10 %}
+                        <td><a href="/">{{applicant.title}} {{applicant.startdate}}</a></td>
+                        <td>{{applicant.groups[0].applicants|length}} / 10 набрано</td>
+                        {% if applicant.groups[0].applicants|length <  10 %}
                         <td><p class="text-success">есть места</p></td>
-                        {% elif lstapp.groups[0].applicants|length ==  10 %}
+                        {% elif applicant.groups[0].applicants|length ==  10 %}
                         <td>группа набрана</td>
                         {% else %}
                         <td><p class="text-danger">группа переполнена!</p></td>
-                        {% endif %}
+                        {% endif %}                       
                     </tr>
-                    <tr>
-                        <td><a href="/">{{ndtapp.groups[0].title}} {{lstapp.groups[0].startdate}}</a></td>
-                        <td>{{ndtapp.groups[0].applicants|length}} / 10 набрано</td>
-                        {% if ndtapp.groups[0].applicants|length <  10 %}
-                        <td><p class="text-success">есть места</p></td>
-                        {% elif ndtapp.groups[0].applicants|length ==  10 %}
-                        <td>группа набрана</td>
-                        {% else %}
-                        <td><p class="text-danger">группа переполнена!</p></td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <td><a href="/">{{thrdapp.groups[0].title}} {{thrdapp.groups[0].startdate}}</a></td>
-                        <td>{{thrdapp.groups[0].applicants|length}} / 10 набрано</td>
-                         {% if thrdapp.groups[0].applicants|length <  10 %}
-                        <td><p class="text-success">есть места</p></td>
-                        {% elif thrdapp.groups[0].applicants|length ==  10 %}
-                        <td>группа набрана</td>
-                        {% else %}
-                        <td><p class="text-danger">группа переполнена!</p></td>
-                        {% endif %}
-                    </tr>
+                {% endfor %}
                 </table>
+            {% else %}
+                    <h4>Пока новых заявок нет.</h4>
+            {% endif %}
                 <br>
                 <a href="" class></a>
             </div>

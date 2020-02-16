@@ -1,14 +1,14 @@
-from app import app
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 
-
+from app import app
+app.secret_key = 'my-super-secret-phrase-I-do-not-tell-this-to-nobody'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///school.db'
 db = SQLAlchemy(app)
 
 
-
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
@@ -61,3 +61,6 @@ class Applicant(db.Model):
 
     def __repr__(self):
         return "Заявка номер #{0} имя:{1}".format(self.id, self.name)
+
+
+
